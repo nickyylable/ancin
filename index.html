@@ -210,7 +210,7 @@
     <audio id="not-sound" src="notify.mp3"></audio><!-- Звуковой эффект для воспроизведения -->
     <audio id="cl-sound" src="close.mp3"></audio>
     <audio id="pl-sound" src="22.mp3"></audio>
-        <script type="module">
+       <script type="module">
         import TWEEN from "https://cdn.skypack.dev/@tweenjs/tween.js";
         import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
         import { OrbitControls } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
@@ -253,7 +253,7 @@
         const loader = new GLTFLoader();
         loader.load('scene.gltf', function (gltf) {
             coin = gltf.scene;
-            coin.scale.set(12, 12, 12);
+            coin.scale.set(15, 15, 15);
             coin.position.y = 13;
             scene.add(coin);
             document.body.classList.remove('hidden');
@@ -275,55 +275,41 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-    const flipButton = document.getElementById("flipButton");
-    const flipSound = new Audio('flip.mp3');
+        const flipSound = new Audio('flip.mp3'); // Path to your sound file
 
-    flipButton.addEventListener("click", () => {
-        executeFlip();
+        document.getElementById("flipButton").addEventListener("click", () => {
+            if (coin) {
+                document.getElementById('pl-sound').play();
+                document.getElementById("resultText").style.display = 'none';
+                spinning = false;
+                coin.rotation.set(0, 0, 0);
+
+                const upAndDownTween = new TWEEN.Tween(coin.position)
+                    .to({ y: [50, 13] }, 2000)
+                    .easing(TWEEN.Easing.Quadratic.InOut);
+
+                const rotationTween = new TWEEN.Tween(coin.rotation)
+                    .to({ y: coin.rotation.y + Math.PI * 10 }, 2000)
+                    .easing(TWEEN.Easing.Quadratic.InOut)
+                    .onComplete(() => {
+                        const result = Math.random() < 0.5 ? "Орел" : "Решка";
+                        const resultText = document.getElementById("resultText");
+                        resultText.textContent = result;
+                        resultText.style.display = 'block';
+                        resultText.style.left = result === "Орел" ? '34%' : '30%'; // Adjusted for dynamic placement
+                        resultText.classList.add("fadeInScaleUp");
+                    });
+
+                // Delay sound playback by 1 second
+                setTimeout(() => {
+                    flipSound.play();
+                }, 800);
+
+                upAndDownTween.start();
+                rotationTween.start();
+            }
+        });
     });
-
-    flipButton.addEventListener("touchstart", (e) => {
-        e.preventDefault(); // Предотвратить стандартное поведение для touch (скроллинг и т.д.)
-        flipButton.classList.add("active");
-    });
-
-    flipButton.addEventListener("touchend", (e) => {
-        flipButton.classList.remove("active");
-        executeFlip(); // Вызов функции при завершении касания
-    });
-
-    function executeFlip() {
-        if (coin) {
-            document.getElementById('pl-sound').play();
-            document.getElementById("resultText").style.display = 'none';
-            spinning = false;
-            coin.rotation.set(0, 0, 0);
-
-            const upAndDownTween = new TWEEN.Tween(coin.position)
-                .to({ y: [50, 13] }, 2000)
-                .easing(TWEEN.Easing.Quadratic.InOut);
-
-            const rotationTween = new TWEEN.Tween(coin.rotation)
-                .to({ y: coin.rotation.y + Math.PI * 10 }, 2000)
-                .easing(TWEEN.Easing.Quadratic.InOut)
-                .onComplete(() => {
-                    const result = Math.random() < 0.5 ? "Орел" : "Решка";
-                    const resultText = document.getElementById("resultText");
-                    resultText.textContent = result;
-                    resultText.style.display = 'block';
-                    resultText.style.left = result === "Орел" ? '34%' : '30%';
-                    resultText.classList.add("fadeInScaleUp");
-                });
-
-            setTimeout(() => {
-                flipSound.play();
-            }, 800);
-
-            upAndDownTween.start();
-            rotationTween.start();
-        }
-    }
-});
 
         window.addEventListener("resize", function () {
             camera.aspect = window.innerWidth / window.innerHeight;
@@ -362,8 +348,10 @@
 
         function startRandomNotification() {
             showNotification();
-            setTimeout(startRandomNotification,  150000); // Следующее уведомление через 20 секунд
+            setTimeout(startRandomNotification,  20000); // Следующее уведомление через 20 секунд
         }
+
+        document.addEventListener('DOMContentLoaded', startRandomNotification);
     </script>
 </body>
 </html> """
