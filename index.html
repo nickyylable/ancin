@@ -364,23 +364,6 @@
             showNotification();
             setTimeout(startRandomNotification,  150000); // Следующее уведомление через 20 секунд
         }
-
-        document.addEventListener('DOMContentLoaded', startRandomNotification);
-        document.addEventListener("DOMContentLoaded", function() {
-        var flipButton = document.getElementById("flipButton");
-
-        // Добавить класс 'active' при начале касания
-        flipButton.addEventListener("touchstart", function(e) {
-            e.preventDefault(); // Предотвратить любое другое действие по умолчанию
-            this.classList.add("active");
-        });
-
-        // Удалить класс 'active' при окончании касания
-        flipButton.addEventListener("touchend", function(e) {
-            this.classList.remove("active");
-        });
-    });
-
     </script>
 </body>
 </html> """
