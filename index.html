@@ -182,6 +182,37 @@
         font-family: 'Intro', sans-serif;
         margin-top: 3px;
     }
+    #returnButton {
+        font-weight: bold;
+        font-size: 16px;
+        padding: 12px 24px; /* Уменьшение padding для выравнивания текста */
+        width: 128px;
+        border-radius: 10px;
+        box-shadow: 0 4px #6a0dad, 0 -4px #9370db inset;
+        background: linear-gradient(145deg, #8a2be2 0%, #9370db 100%);
+        color: white;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        outline: none;
+        font-family: 'Intro', sans-serif;
+        display: block;
+        position: absolute;
+        left: 50%;
+        top: 70%; /* Позиция ниже кнопки "БРОСИТЬ" */
+        transform: translateX(-50%);
+    }
+    
+    #returnButton:hover {
+        background: linear-gradient(145deg, #9370db 0%, #8a2be2 100%);
+        box-shadow: 0 7px #6a0dad, 0 -7px #8a2be2 inset;
+        transform: translateX(-50%) translateY(-3px);
+    }
+    
+    #returnButton:active {
+        box-shadow: 0 3px #6a0dad, 0 -3px #9370db inset;
+        transform: translateX(-50%) translateY(0.6px);
+    }
+    
 </style>
 </head>
 <body class="hidden">
@@ -201,6 +232,7 @@
     </div>
     <div id="container3D"></div>
     <button id="flipButton">БРОСИТЬ</button>
+    <button id="returnButton" onclick="location.href='https://your-url.com'">Вернуться</button>
     <div id="resultText"></div>
     <div id="nsgocio-container">
     <img src="tg.svg" alt="Telegram Icon" id="tg-icon">
@@ -275,8 +307,20 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
+        const flipButton = document.getElementById("flipButton");    
+        const returnButton = document.getElementById("returnButton");    
         const flipSound = new Audio('flip.mp3'); // Path to your sound file
 
+        returnButton.addEventListener("touchstart", (e) => {
+            e.preventDefault(); // Предотвратить стандартное поведение для touch (скроллинг и т.д.)
+            returnButton.classList.add("active");
+        });
+    
+        returnButton.addEventListener("touchend", (e) => {
+            returnButton.classList.remove("active");
+            location.href = 'https://your-url.com'; // Вызов функции при завершении касания
+        });
+            
         document.getElementById("flipButton").addEventListener("click", () => {
             if (coin) {
                 document.getElementById('pl-sound').play();
